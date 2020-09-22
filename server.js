@@ -12,5 +12,5 @@ app.use(express.json({ extended: false }))
 app.use('/', require('./routes/index'));
 app.use('/api/url', require('./routes/url'));
 
-const PORT = 9999;
-app.listen(PORT, () => console.log('Server listen to port 9999'));
+const port = process.env.PORT;
+app.listen(port, () => console.log('Server listen to port ' + port));

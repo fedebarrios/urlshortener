@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const validUrl = require('valid-url');
 const shortId = require('shortid');
-const config = require('config');
 
 const Url = require('../model/Url');
 
@@ -10,12 +9,6 @@ const Url = require('../model/Url');
 // @desc    Create short url
 router.post('/shortener', async (req, res) => {
     const { urlLong } = req.body;
-    const baseUrl = config.get('baseUrl');
-
-    // check base url
-    if (!validUrl.isUri(baseUrl)) {
-        return res.status(401).json('Invalid base url');
-    }
 
     // create url short id code
     const urlCode = shortId.generate();
@@ -28,7 +21,7 @@ router.post('/shortener', async (req, res) => {
            if (url) {
             res.json(url);
            } else {
-            const meliUrl = config.get('meliUrl');
+            const meliUrl = process.env.meliUrl;
             const urlShort = meliUrl + '/' + urlCode;
 
             url = new Url({
@@ -55,12 +48,6 @@ router.post('/shortener', async (req, res) => {
 // @desc    Get long url
 router.post('/longener', async (req, res) => {
     const { urlShort } = req.body;
-    const baseUrl = config.get('baseUrl');
-
-    // check base url
-    if (!validUrl.isUri(baseUrl)) {
-        return res.status(401).json('Invalid base url');
-    }
 
     if (urlShort) {
         try {
@@ -81,12 +68,6 @@ router.post('/longener', async (req, res) => {
 // @desc    Delete short url
 router.post('/deleteShortUrl', async (req, res) => {
     const { urlShort } = req.body;
-    const baseUrl = config.get('baseUrl');
-
-    // check base url
-    if (!validUrl.isUri(baseUrl)) {
-        return res.status(401).json('Invalid base url');
-    }
 
     if (urlShort) {
         try {
