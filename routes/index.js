@@ -7,11 +7,10 @@ const Url = require('../model/Url');
 // @desc    Redirect to original url
 router.get('/:code', async (req, res) => {
     try {
-        const url = await Url.findOne({ urlCode: req.params.code });
+        let url = await Url.findOne({ urlCode: req.params.code }).select('urlLong -_id');
 
         if (url) {
-            //console.log(url.longUrl);
-            return res.redirect(url.longUrl);    
+            return res.redirect(url.urlLong);
         } else {
             return res.status(404).json('No url found'); 
         }

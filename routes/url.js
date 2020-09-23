@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const validUrl = require('valid-url');
 const shortId = require('shortid');
+const config = require('config');
 
 const Url = require('../model/Url');
 
@@ -21,7 +22,7 @@ router.post('/shortener', async (req, res) => {
            if (url) {
             res.json(url);
            } else {
-            const meliUrl = process.env.meliURI;
+            const meliUrl = config.get('meliUrl');
             const urlShort = meliUrl + '/' + urlCode;
 
             url = new Url({
@@ -71,10 +72,8 @@ router.post('/deleteShortUrl', async (req, res) => {
 
     if (urlShort) {
         try {
-
-            // TODO: mejorar esta respuesta en formato json con un ok
             let urlLong = await Url.findOneAndDelete({ urlShort });
-            res.json(urlLong);
+            res.json('Ok');
 
         } catch (e) {
             console.error(e);
