@@ -5,6 +5,7 @@ const shortId = require('shortid');
 const config = require('config');
 
 const Url = require('../model/Url');
+const Bussiness = require('../model/Bussiness');
 
 // @route   POST /api/url/shortener
 // @desc    Create short url

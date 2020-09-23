@@ -12,6 +12,7 @@ app.use(express.json({ extended: false }))
 app.use('/', require('./routes/index'));
 app.use('/api/url', require('./routes/url'));
 
-//const port = process.env.PORT;
-const port = 9999;
+const port = process.env.PORT;
+//const port = 9999;
+console.log('INSIDEE');
 app.listen(port, () => console.log('Server listen to port ' + port));
