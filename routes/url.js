@@ -21,7 +21,7 @@ router.post('/shortener', async (req, res) => {
            if (url) {
             res.json(url);
            } else {
-            const meliUrl = process.env.meliUrl;
+            const meliUrl = process.env.meliURI;
             const urlShort = meliUrl + '/' + urlCode;
 
             url = new Url({

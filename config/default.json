@@ -1,5 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://bf117220:bf117220@my-cluster.xckgz.mongodb.net/<dbname>?retryWrites=true&w=majority",
-    "baseUrl": "http://localhost:9999",
-    "meliUrl": "https://me.li"
-}
