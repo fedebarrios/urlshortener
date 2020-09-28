@@ -9,6 +9,8 @@ router.get('/:code', async (req, res) => {
     try {
         let url = await Url.findOne({ urlCode: req.params.code }).select('urlLong -_id');
 
+        
+
         if (url) {
             return res.redirect(url.urlLong);
         } else {
