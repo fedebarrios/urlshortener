@@ -5,7 +5,6 @@ const shortId = require('shortid');
 const config = require('config');
 
 const Url = require('../model/Url');
-const Bussiness = require('../model/Bussiness');
 
 // @route   POST /api/url/shortener
 // @desc    Create short url
@@ -15,7 +14,7 @@ router.post('/shortener', async (req, res) => {
     // create url short id code
     const urlCode = shortId.generate();
 
-    // create short url
+    // is urlLong valid
     if (validUrl.isUri(urlLong)) {
         try {
            let url = await Url.findOne({ urlLong });
@@ -23,16 +22,21 @@ router.post('/shortener', async (req, res) => {
            if (url) {
             res.json(url);
            } else {
-            const meliUrl = config.get('meliUrl');
+            // create short url
+            const meliUrl = config.get('devBaseUrl');
             const urlShort = meliUrl + '/' + urlCode;
 
+            let bussiness = await Url.findOne({  });
+            console.log(bussiness);
+            
             url = new Url({
                 urlLong,
                 urlShort,
                 urlCode,
-                date: new Date()
+                date: new Date(),
+                clicks: 0
             });
-
+                            
             await url.save();
             res.json(url);
            }
@@ -53,16 +57,22 @@ router.post('/longener', async (req, res) => {
 
     if (urlShort) {
         try {
-
+            //get only urlLong from urlShort
             let urlLong = await Url.findOne({ urlShort }).select('urlLong -_id');
-            res.json(urlLong);
+
+            if (urlLong) {
+                res.json(urlLong);
+            } else {
+                res.status(404).json('No short url found');
+            }
+            
 
         } catch (e) {
             console.error(e);
             res.status(500).json('Internal server error');
         }
     } else {
-        res.status(404).json('No short url found');
+        res.status(404).json('No short url given');
     }
 });
 
@@ -73,15 +83,21 @@ router.post('/deleteShortUrl', async (req, res) => {
 
     if (urlShort) {
         try {
+            // find by urlShort and delete collection
             let urlLong = await Url.findOneAndDelete({ urlShort });
-            res.json('Ok');
+
+            if (urlLong) {
+                res.json('Ok, deleted');
+            } else {
+                res.status(404).json('No short url found');
+            }
 
         } catch (e) {
             console.error(e);
             res.status(500).json('Internal server error');
         }
     } else {
-        res.status(404).json('No short url found');
+        res.status(404).json('No short url given');
     }
 });
 
