@@ -1,6 +1,6 @@
 {
     "mongoURI": "mongodb+srv://bf117220:bf117220@my-cluster.xckgz.mongodb.net/<dbname>?retryWrites=true&w=majority",
-    "devMongoURI": "mongodb://18.218.213.181:27017/?gssapiServiceName=mongodb",
+    "ec2MongoURI": "mongodb://18.218.213.181:27017/?gssapiServiceName=mongodb",
     "baseUrl": "http://node-express-env.eba-dx8hgrp2.us-east-2.elasticbeanstalk.com",
     "devBaseUrl": "http://localhost:9999",
     "meliUrl": "https://me.li"

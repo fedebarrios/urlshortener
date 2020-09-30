@@ -5,6 +5,8 @@ const shortId = require('shortid');
 const config = require('config');
 
 const Url = require('../model/Url');
+const Deleted = require('../model/Deleted');
+const Created = require('../model/Created');
 
 // @route   POST /api/url/shortener
 // @desc    Create short url
@@ -23,12 +25,9 @@ router.post('/shortener', async (req, res) => {
             res.json(url);
            } else {
             // create short url
-            const meliUrl = config.get('devBaseUrl');
+            const meliUrl = config.get('meliUrl');
             const urlShort = meliUrl + '/' + urlCode;
 
-            let bussiness = await Url.findOne({  });
-            console.log(bussiness);
-            
             url = new Url({
                 urlLong,
                 urlShort,
@@ -36,8 +35,14 @@ router.post('/shortener', async (req, res) => {
                 date: new Date(),
                 clicks: 0
             });
-                            
             await url.save();
+
+            // increment createdUrls count
+            let created = new Created({
+                createdUrls: 'Ok'
+            });
+            await created.save();
+
             res.json(url);
            }
 
@@ -65,7 +70,6 @@ router.post('/longener', async (req, res) => {
             } else {
                 res.status(404).json('No short url found');
             }
-            
 
         } catch (e) {
             console.error(e);
@@ -87,6 +91,12 @@ router.post('/deleteShortUrl', async (req, res) => {
             let urlLong = await Url.findOneAndDelete({ urlShort });
 
             if (urlLong) {
+                let deleted = new Deleted({
+                    deletedUrls: 'Ok'
+                });
+
+                await deleted.save();
+
                 res.json('Ok, deleted');
             } else {
                 res.status(404).json('No short url found');
@@ -99,6 +109,33 @@ router.post('/deleteShortUrl', async (req, res) => {
     } else {
         res.status(404).json('No short url given');
     }
+});
+
+// @route   POST /api/url/getMetrics
+// @desc    Get bussiness metrics
+router.post('/getMetrics', async (req, res) => {
+
+    try {
+        // find all collections
+        let deleted = await Deleted.find({ });
+        let created = await Created.find({ });
+
+        // count quantity
+        let deletedCount = deleted.length;
+        let createdCount = created.length;
+
+        let resp = {
+            'createdUrls' : createdCount,
+            'deletedUrls' : deletedCount
+        }
+
+        res.json(resp);
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).json('Internal server error');
+    }
+
 });
 
 module.exports = router;
