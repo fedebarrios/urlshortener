@@ -25,7 +25,7 @@ router.post('/shortener', async (req, res) => {
             res.json(url);
            } else {
             // create short url
-            const meliUrl = config.get('meliUrl');
+            const meliUrl = config.get('devBaseUrl');
             const urlShort = meliUrl + '/' + urlCode;
 
             url = new Url({

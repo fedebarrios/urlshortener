@@ -20,7 +20,7 @@ router.get('/:code', async (req, res) => {
             // first redirect to dont make the user wait for update
             res.redirect(url.urlLong);
 
-            // then update 
+            // then update
             return url.updateOne({ clicks });
 
         } else {
